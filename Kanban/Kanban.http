@@ -1,0 +1,30 @@
+@Kanban_HostAddress = https://localhost:7262
+
+GET {{Kanban_HostAddress}}/story/
+Accept: application/json
+
+###
+
+POST {{Kanban_HostAddress}}/story
+Content-Type: application/json
+
+{
+  //Story
+}
+
+###
+
+GET {{Kanban_HostAddress}}/user
+Accept: application/json
+
+###
+
+POST {{Kanban_HostAddress}}/user
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "name": "Bababui"
+}
+
+###
