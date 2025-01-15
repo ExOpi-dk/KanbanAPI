@@ -6,20 +6,20 @@ namespace Kanban.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StoryController(IStoryService storyService) : ControllerBase
+    public class StatusController(IStatusService statusService) : ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Produces("application/json")]
-        [Produces<List<Story>>]
-        [HttpGet(Name = "GetStory")]
-        public async Task<IActionResult> GetStory()
+        [Produces<List<Status>>]
+        [HttpGet(Name = "GetStatus")]
+        public async Task<IActionResult> GetStatus()
         {
-            List<Story> stories = await storyService.GetStories();
+            List<Status> statuses = await statusService.GetStatuses();
 
-            if (stories.Count > 0)
+            if (statuses.Count > 0)
             {
-                return Ok(stories);
+                return Ok(statuses);
             }
 
             return NotFound();
@@ -29,15 +29,15 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
-        [HttpPost(Name = "PostStory")]
-        public async Task<IActionResult> PostStory([FromBody] Story story)
+        [HttpPost(Name = "PostStatus")]
+        public async Task<IActionResult> PostStatus([FromBody] Status status)
         {
-            Story? newStory = await storyService.PostStory(story);
+            Status? newStatus = await statusService.PostStatus(status);
 
-            if (newStory != null)
+            if (newStatus != null)
             {
-                return CreatedAtAction(nameof(PostStory),
-                    new { id = newStory.Id }, newStory);
+                return CreatedAtAction(nameof(PostStatus),
+                    new { id = newStatus.Id }, newStatus);
             }
             else
             {

@@ -12,9 +12,13 @@ services.AddControllers();
 services.AddOpenApi();
 services.AddDbContext<KanbanContext>();
 services.AddTransient<IUserRepository, UserRepository>();
+services.AddTransient<IBoardRepository, BoardRepository>();
 services.AddTransient<IStoryRepository, StoryRepository>();
+services.AddTransient<IStatusRepository, StatusRepository>();
 services.AddTransient<IUserService, UserService>();
+services.AddTransient<IBoardService, BoardService>();
 services.AddTransient<IStoryService, StoryService>();
+services.AddTransient<IStatusService, StatusService>();
 
 var app = builder.Build();
 

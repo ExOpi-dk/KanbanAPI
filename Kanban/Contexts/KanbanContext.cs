@@ -24,54 +24,49 @@ namespace Kanban.Contexts
         {
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.UserId);
-                entity.HasMany(e => e.OwnedBoards)
-                    .WithOne(e => e.Owner);
-                entity.HasMany(e => e.OwnedStories)
-                    .WithOne(e => e.Owner);
-                entity.HasMany(e => e.AssignedStories)
-                    .WithMany(e => e.Assignees);
+                entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
             });
 
             modelBuilder.Entity<Board>(entity =>
             {
-                entity.HasKey(e => e.BoardId);
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.OwnerId).IsRequired();
                 entity.HasOne(e => e.Owner)
-                    .WithMany(e => e.OwnedBoards)
+                    .WithMany()
                     .HasForeignKey(e => e.OwnerId)
                     .OnDelete(DeleteBehavior.Restrict);
-                entity.HasMany(e => e.Stories)
-                    .WithOne(e => e.Board);
-                entity.Property(e => e.Name).IsRequired();
             });
 
             modelBuilder.Entity<Story>(entity =>
             {
-                entity.HasKey(e => e.StoryId);
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.OwnerId).IsRequired();
                 entity.HasOne(e => e.Owner)
-                    .WithMany(e => e.OwnedStories)
+                    .WithMany()
                     .HasForeignKey(e => e.OwnerId)
                     .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(e => e.BoardId).IsRequired();
                 entity.HasOne(e => e.Board)
-                    .WithMany(e => e.Stories)
+                    .WithMany()
                     .HasForeignKey(e => e.BoardId)
                     .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(e => e.AssigneeIds).IsRequired(false);
                 entity.HasMany(e => e.Assignees)
-                    .WithMany(e => e.AssignedStories);
+                    .WithMany();
+                entity.Property(e => e.StatusId).IsRequired(false);
                 entity.HasOne(e => e.Status)
-                    .WithMany(e => e.Stories)
+                    .WithMany()
                     .HasForeignKey(e => e.StatusId)
                     .OnDelete(DeleteBehavior.Restrict);
                 entity.Property(e => e.Description).IsRequired(false);
-                entity.Property(e => e.Name).IsRequired();
             });
 
             modelBuilder.Entity<Status>(entity =>
             {
-                entity.HasKey(e => e.StatusId);
-                entity.HasMany(e => e.Stories)
-                    .WithOne(e => e.Status);
+                entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
             });
         }

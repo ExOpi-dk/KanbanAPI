@@ -25,6 +25,8 @@ namespace Kanban.Repositories
 
         public async Task<bool> PostUser(User user)
         {
+            user.Id = default;
+
             await s_context.Users.AddAsync(user);
             int result = await s_context.SaveChangesAsync();
 

@@ -10,6 +10,8 @@ namespace Kanban.Controllers
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/json")]
+        [Produces<List<User>>]
         [HttpGet(Name = "GetUser")]
         public async Task<IActionResult> GetUser()
         {
@@ -26,17 +28,16 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Consumes("application/json")]
         [HttpPost(Name = "PostUser")]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
-            user.UserId = default;
-
             User? newUser = await userService.PostUser(user);
 
             if (newUser != null)
             {
                 return CreatedAtAction(nameof(PostUser),
-                    new { id = newUser.UserId }, newUser);
+                    new { id = newUser.Id }, newUser);
             }
             else
             {

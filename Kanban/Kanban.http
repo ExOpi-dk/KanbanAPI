@@ -9,7 +9,10 @@ POST {{Kanban_HostAddress}}/story
 Content-Type: application/json
 
 {
-  //Story
+  "id": 1,
+  "name": "TestStory",
+  "ownerId": 1,
+  "boardId": 1
 }
 
 ###
@@ -23,8 +26,39 @@ POST {{Kanban_HostAddress}}/user
 Content-Type: application/json
 
 {
-  "userId": 1,
-  "name": "Bababui"
+  "id": 1,
+  "name": "Test2"
+}
+
+###
+
+GET {{Kanban_HostAddress}}/board
+Accept: application/json
+
+###
+
+POST {{Kanban_HostAddress}}/board
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "NewBoard",
+  "ownerId": "1"
+}
+
+###
+
+GET {{Kanban_HostAddress}}/status
+Accept: application/json
+
+###
+
+POST {{Kanban_HostAddress}}/status
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "NewStatus"
 }
 
 ###

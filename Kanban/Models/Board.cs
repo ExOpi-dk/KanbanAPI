@@ -1,11 +1,13 @@
-﻿namespace Kanban.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Kanban.Models
 {
     public class Board
     {
-        public required int BoardId { get; set; }
+        public required int Id { get; set; }
         public required string Name { get; set; }
-        public required User Owner { get; set; }
         public required int OwnerId { get; set; }
-        public List<Story> Stories { get; set; } = [];
+        [JsonIgnore]
+        public User? Owner { get; set; }
     }
 }
