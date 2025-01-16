@@ -57,7 +57,6 @@ namespace Kanban.Contexts
                     .WithMany()
                     .HasForeignKey(e => e.BoardId)
                     .OnDelete(DeleteBehavior.Restrict);
-                entity.Property(e => e.AssigneeIds).IsRequired(false);
                 entity.HasMany(e => e.Assignees)
                     .WithMany();
                 entity.Property(e => e.StatusId).IsRequired(false);
