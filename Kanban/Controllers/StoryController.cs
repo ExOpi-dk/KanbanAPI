@@ -32,7 +32,7 @@ namespace Kanban.Controllers
         [HttpPost(Name = "PostStory")]
         public async Task<IActionResult> PostStory([FromBody] Story story)
         {
-            Story? newStory = await storyService.PostStory(story);
+            Story? newStory = await storyService.CreateStory(story);
 
             if (newStory != null)
             {
@@ -43,6 +43,33 @@ namespace Kanban.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes("application/json")]
+        [HttpPut(Name = "UpsertStory")]
+        public async Task<IActionResult> UpsertStory([FromBody] Story requestStory)
+        {
+            Story? existingStory = await storyService.GetStoryById(requestStory.Id);
+
+            if (existingStory != null)
+            {
+                Story? updatedStory = await storyService.UpdateStory(requestStory);
+                if (updatedStory != null)
+                {
+                    return Ok(updatedStory);
+                }
+                return BadRequest();
+            }
+
+            Story? createdStory = await storyService.CreateStory(requestStory);
+            if (createdStory != null)
+            {
+                return CreatedAtAction(nameof(UpsertStory), new { id = createdStory.Id }, createdStory);
+            }
+            return BadRequest();
         }
     }
 }

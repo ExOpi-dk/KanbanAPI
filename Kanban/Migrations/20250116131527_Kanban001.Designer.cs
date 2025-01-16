@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kanban.Migrations
 {
     [DbContext(typeof(KanbanContext))]
-    [Migration("20250116123152_Kanban001")]
+    [Migration("20250116131527_Kanban001")]
     partial class Kanban001
     {
         /// <inheritdoc />
