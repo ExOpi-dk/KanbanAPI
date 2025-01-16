@@ -26,8 +26,8 @@ POST {{Kanban_HostAddress}}/user
 Content-Type: application/json
 
 {
-  "id": 1,
-  "name": "Test2"
+  "id": 1002,
+  "name": "Test1000"
 }
 
 ###
@@ -36,8 +36,8 @@ PUT {{Kanban_HostAddress}}/user
 Content-Type: application/json
 
 {
-  "id": 2,
-  "name": "Test4"
+  "id": 1102,
+  "name": "Test1000"
 }
 
 ###

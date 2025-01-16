@@ -55,24 +55,22 @@ namespace Kanban.Controllers
         {
             User? existingUser = await userService.GetUserById(requestUser.Id);
 
-            User? updatedUser = await userService.UpdateUser(requestUser);
-
-            if (updatedUser != null)
+            if (existingUser != null)
             {
-                if (existingUser != null)
+                User? updatedUser = await userService.UpdateUser(requestUser);
+                if (updatedUser != null)
                 {
                     return Ok(updatedUser);
                 }
-                else
-                {
-                    return CreatedAtAction(nameof(UpdateUser),
-                        new { id = updatedUser.Id }, updatedUser);
-                }
-            }
-            else
-            {
                 return BadRequest();
             }
+
+            User? createdUser = await userService.PostUser(requestUser);
+            if (createdUser != null)
+            {
+                return CreatedAtAction(nameof(UpdateUser), new { id = createdUser.Id }, createdUser);
+            }
+            return BadRequest();
         }
     }
 }
