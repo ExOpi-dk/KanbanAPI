@@ -12,6 +12,13 @@ namespace Kanban.Services
             return users;
         }
 
+        public async Task<User?> GetUserById(int id)
+        {
+            User? user = await userRepository.GetUserById(id);
+
+            return user;
+        }
+
         public async Task<User?> PostUser(User user)
         {
             bool success = await userRepository.PostUser(user);
@@ -19,13 +26,11 @@ namespace Kanban.Services
             return success ? user : null;
         }
 
-        public async Task<(User? updatedUser, bool existed)> UpdateUser(User newUser)
+        public async Task<User?> UpdateUser(User user)
         {
-            User? existingUser = await userRepository.GetUserById(newUser.Id);
-            bool existed = existingUser != null;
-            bool success = await userRepository.UpdateUser(newUser);
+            bool success = await userRepository.UpdateUser(user);
 
-            return (success ? newUser : null, existed);
+            return success ? user : null;
         }
     }
 }

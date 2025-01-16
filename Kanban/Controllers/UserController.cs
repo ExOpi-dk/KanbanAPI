@@ -51,20 +51,22 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [HttpPut(Name = "UpdateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUser([FromBody] User requestUser)
         {
-            (User? newUser, bool existed) = await userService.UpdateUser(updatedUser);
+            User? existingUser = await userService.GetUserById(requestUser.Id);
 
-            if (newUser != null)
+            User? updatedUser = await userService.UpdateUser(requestUser);
+
+            if (updatedUser != null)
             {
-                if (existed)
+                if (existingUser != null)
                 {
-                    return Ok(newUser);
+                    return Ok(updatedUser);
                 }
                 else
                 {
                     return CreatedAtAction(nameof(UpdateUser),
-                    new { id = newUser.Id }, newUser);
+                        new { id = updatedUser.Id }, updatedUser);
                 }
             }
             else
