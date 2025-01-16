@@ -10,14 +10,14 @@ namespace Kanban.Repositories
 
         public async Task<User?> GetUserById(int id)
         {
-            User? user = await s_context.FindAsync<User>(id);
+            User? user = await s_context.Users.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
 
             return user;
         }
 
         public async Task<List<User>> GetAllUsers()
         {
-            List<User> users = await s_context.Users.ToListAsync();
+            List<User> users = await s_context.Users.AsNoTracking().ToListAsync();
 
             return users;
         }
@@ -32,12 +32,12 @@ namespace Kanban.Repositories
             return result > 0;
         }
 
-        public async Task<bool> UpdateUser(User oldUser, User newUser)
+        public async Task<bool> UpdateUser(User user)
         {
-            s_context.Users.Entry(oldUser).CurrentValues.SetValues(newUser);
-            int result = await s_context.SaveChangesAsync();
+            s_context.Users.Attach(user);
+            s_context.Entry(user).State = EntityState.Modified;
 
-            return result > 0;
+            return await s_context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteUser(User user)

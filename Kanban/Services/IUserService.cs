@@ -5,6 +5,8 @@ namespace Kanban.Services
     public interface IUserService
     {
         Task<List<User>> GetUsers();
-        Task<User?> PostUser(User user);
+        Task<User?> GetUserById(int id);
+        Task<User?> CreateUser(User user);
+        Task<User?> UpdateUser(User user);
     }
 }

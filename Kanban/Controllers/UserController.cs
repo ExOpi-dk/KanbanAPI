@@ -32,7 +32,7 @@ namespace Kanban.Controllers
         [HttpPost(Name = "PostUser")]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
-            User? newUser = await userService.PostUser(user);
+            User? newUser = await userService.CreateUser(user);
 
             if (newUser != null)
             {
@@ -43,6 +43,34 @@ namespace Kanban.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Consumes("application/json")]
+        [HttpPut(Name = "UpsertUser")]
+        public async Task<IActionResult> UpsertUser([FromBody] User requestUser)
+        {
+            User? existingUser = await userService.GetUserById(requestUser.Id);
+
+            if (existingUser != null)
+            {
+                User? updatedUser = await userService.UpdateUser(requestUser);
+                if (updatedUser != null)
+                {
+                    return Ok(updatedUser);
+                }
+                return BadRequest();
+            }
+
+            User? createdUser = await userService.CreateUser(requestUser);
+            if (createdUser != null)
+            {
+                return CreatedAtAction(nameof(UpsertUser), new { id = createdUser.Id }, createdUser);
+            }
+            return BadRequest();
         }
     }
 }

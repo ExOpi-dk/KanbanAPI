@@ -12,9 +12,23 @@ namespace Kanban.Services
             return users;
         }
 
-        public async Task<User?> PostUser(User user)
+        public async Task<User?> GetUserById(int id)
+        {
+            User? user = await userRepository.GetUserById(id);
+
+            return user;
+        }
+
+        public async Task<User?> CreateUser(User user)
         {
             bool success = await userRepository.PostUser(user);
+
+            return success ? user : null;
+        }
+
+        public async Task<User?> UpdateUser(User user)
+        {
+            bool success = await userRepository.UpdateUser(user);
 
             return success ? user : null;
         }

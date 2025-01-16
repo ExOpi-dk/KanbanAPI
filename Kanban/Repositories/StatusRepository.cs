@@ -7,18 +7,17 @@ namespace Kanban.Repositories
     public class StatusRepository : IStatusRepository
     {
         private static readonly KanbanContext s_context = new();
-        private static readonly Lock s_lock = new();
 
         public async Task<Status?> GetStatusById(int id)
         {
-            Status? status = await s_context.FindAsync<Status>(id);
+            Status? status = await s_context.Statuses.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
 
             return status;
         }
 
         public async Task<List<Status>> GetAllStatuses()
         {
-            List<Status> statuses = await s_context.Statuses.ToListAsync();
+            List<Status> statuses = await s_context.Statuses.AsNoTracking().ToListAsync();
 
             return statuses;
         }
@@ -33,23 +32,16 @@ namespace Kanban.Repositories
             return result > 0;
         }
 
-        public async Task<bool> UpdateStatus(Status oldStatus, Status newStatus)
+        public async Task<bool> UpdateStatus(Status updatedStatus)
         {
-            lock (s_lock)
-            {
-                s_context.Statuses.Entry(oldStatus).CurrentValues.SetValues(newStatus);
-            }
-            int result = await s_context.SaveChangesAsync();
-
-            return result > 0;
+            s_context.Statuses.Attach(updatedStatus);
+            s_context.Entry(updatedStatus).State = EntityState.Modified;
+            return await s_context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteStatus(Status status)
         {
-            lock (s_lock)
-            {
-                s_context.Statuses.Remove(status);
-            }
+            s_context.Statuses.Remove(status);
             int result = await s_context.SaveChangesAsync();
 
             return result > 0;
