@@ -22,7 +22,7 @@ namespace Kanban.Repositories
             return statuses;
         }
 
-        public async Task<bool> PostStatus(Status status)
+        public async Task<bool> CreateStatus(Status status)
         {
             status.Id = default;
 

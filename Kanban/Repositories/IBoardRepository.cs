@@ -7,7 +7,7 @@ namespace Kanban.Repositories
         Task<bool> DeleteBoard(Board board);
         Task<List<Board>> GetAllBoards();
         Task<Board?> GetBoardById(int id);
-        Task<bool> PostBoard(Board board);
+        Task<bool> CreateBoard(Board board);
         Task<bool> UpdateBoard(Board updatedBoard);
     }
 }

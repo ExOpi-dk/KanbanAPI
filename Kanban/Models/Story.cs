@@ -19,5 +19,7 @@ namespace Kanban.Models
         public int? StatusId { get; set; }
         [JsonIgnore]
         public Status? Status { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? LastUpdated { get; set; }
     }
 }

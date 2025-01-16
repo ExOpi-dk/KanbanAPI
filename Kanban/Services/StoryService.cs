@@ -14,7 +14,7 @@ namespace Kanban.Services
 
         public async Task<Story?> PostStory(Story story)
         {
-            bool success = await storyRepository.PostStory(story);
+            bool success = await storyRepository.CreateStory(story);
 
             return success ? story : null;
         }

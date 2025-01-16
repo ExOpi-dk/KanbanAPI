@@ -27,7 +27,6 @@ namespace Kanban.Controllers
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [HttpPost(Name = "PostUser")]
         public async Task<IActionResult> PostUser([FromBody] User user)
@@ -48,7 +47,6 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [HttpPut(Name = "UpsertUser")]
         public async Task<IActionResult> UpsertUser([FromBody] User requestUser)
@@ -71,6 +69,24 @@ namespace Kanban.Controllers
                 return CreatedAtAction(nameof(UpsertUser), new { id = createdUser.Id }, createdUser);
             }
             return BadRequest();
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete(Name = "DeleteUser")]
+        public async Task<IActionResult> DeleteUser([FromQuery] int id)
+        {
+            bool? result = await userService.DeleteUser(id);
+
+            if (result != null)
+            {
+                return (bool)result ? NoContent() : BadRequest();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

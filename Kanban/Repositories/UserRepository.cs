@@ -22,7 +22,7 @@ namespace Kanban.Repositories
             return users;
         }
 
-        public async Task<bool> PostUser(User user)
+        public async Task<bool> CreateUser(User user)
         {
             user.Id = default;
 

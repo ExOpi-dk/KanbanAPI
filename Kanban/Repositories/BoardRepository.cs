@@ -18,7 +18,7 @@ namespace Kanban.Repositories
             return await s_context.Boards.AsNoTracking().ToListAsync();
         }
 
-        public async Task<bool> PostBoard(Board board)
+        public async Task<bool> CreateBoard(Board board)
         {
             board.Id = default;
 

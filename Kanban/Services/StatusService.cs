@@ -14,7 +14,7 @@ namespace Kanban.Services
 
         public async Task<Status?> PostStatus(Status status)
         {
-            bool success = await statusRepository.PostStatus(status);
+            bool success = await statusRepository.CreateStatus(status);
 
             return success ? status : null;
         }

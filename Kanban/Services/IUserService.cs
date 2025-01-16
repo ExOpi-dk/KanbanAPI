@@ -8,5 +8,6 @@ namespace Kanban.Services
         Task<User?> GetUserById(int id);
         Task<User?> CreateUser(User user);
         Task<User?> UpdateUser(User user);
+        Task<bool?> DeleteUser(int id);
     }
 }

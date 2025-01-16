@@ -9,5 +9,7 @@ namespace Kanban.Models
         public required int OwnerId { get; set; }
         [JsonIgnore]
         public User? Owner { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? LastUpdated { get; set; }
     }
 }

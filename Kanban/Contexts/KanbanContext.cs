@@ -26,6 +26,8 @@ namespace Kanban.Contexts
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Created)
+                    .HasDefaultValueSql("getdate()");
             });
 
             modelBuilder.Entity<Board>(entity =>
@@ -37,6 +39,8 @@ namespace Kanban.Contexts
                     .WithMany()
                     .HasForeignKey(e => e.OwnerId)
                     .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(e => e.Created)
+                    .HasDefaultValueSql("getdate()");
             });
 
             modelBuilder.Entity<Story>(entity =>
@@ -62,12 +66,16 @@ namespace Kanban.Contexts
                     .HasForeignKey(e => e.StatusId)
                     .OnDelete(DeleteBehavior.Restrict);
                 entity.Property(e => e.Description).IsRequired(false);
+                entity.Property(e => e.Created)
+                    .HasDefaultValueSql("getdate()");
             });
 
             modelBuilder.Entity<Status>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Created)
+                    .HasDefaultValueSql("getdate()");
             });
         }
     }

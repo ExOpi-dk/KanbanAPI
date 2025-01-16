@@ -22,7 +22,7 @@ namespace Kanban.Repositories
             return stories;
         }
 
-        public async Task<bool> PostStory(Story story)
+        public async Task<bool> CreateStory(Story story)
         {
             story.Id = default;
 
