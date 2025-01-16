@@ -6,7 +6,7 @@ namespace Kanban.Services
     {
         Task<List<User>> GetUsers();
         Task<User?> GetUserById(int id);
-        Task<User?> PostUser(User user);
+        Task<User?> CreateUser(User user);
         Task<User?> UpdateUser(User user);
     }
 }

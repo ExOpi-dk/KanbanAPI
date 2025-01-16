@@ -19,7 +19,7 @@ namespace Kanban.Services
             return user;
         }
 
-        public async Task<User?> PostUser(User user)
+        public async Task<User?> CreateUser(User user)
         {
             bool success = await userRepository.PostUser(user);
 
