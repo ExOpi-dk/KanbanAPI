@@ -12,7 +12,7 @@ namespace Kanban.Services
             return boards;
         }
 
-        public async Task<Board?> PostBoard(Board board)
+        public async Task<Board?> CreateBoard(Board board)
         {
             bool success = await boardRepository.CreateBoard(board);
 

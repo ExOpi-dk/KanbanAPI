@@ -1,6 +1,7 @@
 using Kanban.Models;
 using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
+using Kanban.Enums;
 
 namespace Kanban.Controllers
 {
@@ -77,15 +78,18 @@ namespace Kanban.Controllers
         [HttpDelete(Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUser([FromQuery] int id)
         {
-            bool? result = await userService.DeleteUser(id);
+            DeleteResult result = await userService.DeleteUser(id);
 
-            if (result != null)
+            switch (result)
             {
-                return (bool)result ? NoContent() : BadRequest();
-            }
-            else
-            {
-                return NotFound();
+                case DeleteResult.Success:
+                    return NoContent();
+                case DeleteResult.Error:
+                    return BadRequest();
+                case DeleteResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
             }
         }
     }

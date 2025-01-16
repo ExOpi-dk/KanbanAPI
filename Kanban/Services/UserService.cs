@@ -1,4 +1,5 @@
-﻿using Kanban.Models;
+﻿using Kanban.Enums;
+using Kanban.Models;
 using Kanban.Repositories;
 
 namespace Kanban.Services
@@ -33,19 +34,17 @@ namespace Kanban.Services
             return success ? user : null;
         }
 
-        public async Task<bool?> DeleteUser(int id)
+        public async Task<DeleteResult> DeleteUser(int id)
         {
             User? user = await userRepository.GetUserById(id);
 
             if (user != null)
             {
                 bool success = await userRepository.DeleteUser(user);
-                return success;
+                return success ? DeleteResult.Success : DeleteResult.Error;
             }
-            else
-            {
-                return null;
-            }
+
+            return DeleteResult.NotFound;
         }
     }
 }

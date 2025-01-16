@@ -32,7 +32,7 @@ namespace Kanban.Controllers
         [HttpPost(Name = "PostBoard")]
         public async Task<IActionResult> PostBoard([FromBody] Board board)
         {
-            Board? newBoard = await boardService.PostBoard(board);
+            Board? newBoard = await boardService.CreateBoard(board);
 
             if (newBoard != null)
             {
