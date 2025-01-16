@@ -33,22 +33,6 @@ namespace Kanban.Services
             return success ? user : null;
         }
 
-        public async Task<bool?> AnonymizeUser(int id)
-        {
-            User? user = await userRepository.GetUserById(id);
-
-            if (user != null)
-            {
-                user.Name = string.Empty;
-                bool success = await userRepository.UpdateUser(user);
-                return success;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public async Task<bool?> DeleteUser(int id)
         {
             User? user = await userRepository.GetUserById(id);
