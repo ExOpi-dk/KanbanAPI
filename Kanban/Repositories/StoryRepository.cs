@@ -24,8 +24,6 @@ namespace Kanban.Repositories
 
         public async Task<bool> CreateStory(Story story)
         {
-            story.Id = default;
-
             await s_context.Stories.AddAsync(story);
             int result = await s_context.SaveChangesAsync();
 

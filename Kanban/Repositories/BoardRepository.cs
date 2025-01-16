@@ -20,8 +20,6 @@ namespace Kanban.Repositories
 
         public async Task<bool> CreateBoard(Board board)
         {
-            board.Id = default;
-
             await s_context.Boards.AddAsync(board);
             return await s_context.SaveChangesAsync() > 0;
         }

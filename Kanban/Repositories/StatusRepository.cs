@@ -24,8 +24,6 @@ namespace Kanban.Repositories
 
         public async Task<bool> CreateStatus(Status status)
         {
-            status.Id = default;
-
             await s_context.Statuses.AddAsync(status);
             int result = await s_context.SaveChangesAsync();
 
