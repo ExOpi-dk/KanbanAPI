@@ -18,5 +18,14 @@ namespace Kanban.Services
 
             return success ? user : null;
         }
+
+        public async Task<(User? updatedUser, bool existed)> UpdateUser(User newUser)
+        {
+            User? existingUser = await userRepository.GetUserById(newUser.Id);
+            bool existed = existingUser != null;
+            bool success = await userRepository.UpdateUser(newUser);
+
+            return (success ? newUser : null, existed);
+        }
     }
 }

@@ -32,6 +32,16 @@ Content-Type: application/json
 
 ###
 
+PUT {{Kanban_HostAddress}}/user
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Test3"
+}
+
+###
+
 GET {{Kanban_HostAddress}}/board
 Accept: application/json
 

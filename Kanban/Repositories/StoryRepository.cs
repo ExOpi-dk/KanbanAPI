@@ -7,18 +7,17 @@ namespace Kanban.Repositories
     public class StoryRepository : IStoryRepository
     {
         private static readonly KanbanContext s_context = new();
-        private static readonly Lock s_lock = new();
 
         public async Task<Story?> GetStoryById(int id)
         {
-            Story? story = await s_context.FindAsync<Story>(id);
+            Story? story = await s_context.Stories.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
 
             return story;
         }
 
         public async Task<List<Story>> GetAllStories()
         {
-            List<Story> stories = await s_context.Stories.ToListAsync();
+            List<Story> stories = await s_context.Stories.AsNoTracking().ToListAsync();
 
             return stories;
         }
@@ -33,23 +32,16 @@ namespace Kanban.Repositories
             return result > 0;
         }
 
-        public async Task<bool> UpdateStory(Story oldStory, Story newStory)
+        public async Task<bool> UpdateStory(Story updatedStory)
         {
-            lock (s_lock)
-            {
-                s_context.Stories.Entry(oldStory).CurrentValues.SetValues(newStory);
-            }
-            int result = await s_context.SaveChangesAsync();
-
-            return result > 0;
+            s_context.Stories.Attach(updatedStory);
+            s_context.Entry(updatedStory).State = EntityState.Modified;
+            return await s_context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> DeleteStory(Story story)
         {
-            lock (s_lock)
-            {
-                s_context.Stories.Remove(story);
-            }
+            s_context.Stories.Remove(story);
             int result = await s_context.SaveChangesAsync();
 
             return result > 0;

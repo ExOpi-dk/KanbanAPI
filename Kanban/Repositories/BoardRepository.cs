@@ -10,7 +10,7 @@ namespace Kanban.Repositories
 
         public async Task<Board?> GetBoardById(int id)
         {
-            return await s_context.Boards.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+            return await s_context.Boards.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<List<Board>> GetAllBoards()
