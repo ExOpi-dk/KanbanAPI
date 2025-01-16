@@ -7,7 +7,6 @@ namespace Kanban.Repositories
     public class UserRepository : IUserRepository
     {
         private static readonly KanbanContext s_context = new();
-        private static readonly Lock s_lock = new();
 
         public async Task<User?> GetUserById(int id)
         {
@@ -35,10 +34,7 @@ namespace Kanban.Repositories
 
         public async Task<bool> UpdateUser(User oldUser, User newUser)
         {
-            lock (s_lock)
-            {
-                s_context.Users.Entry(oldUser).CurrentValues.SetValues(newUser);
-            }
+            s_context.Users.Entry(oldUser).CurrentValues.SetValues(newUser);
             int result = await s_context.SaveChangesAsync();
 
             return result > 0;
@@ -46,10 +42,7 @@ namespace Kanban.Repositories
 
         public async Task<bool> DeleteUser(User user)
         {
-            lock (s_lock)
-            {
-                s_context.Users.Remove(user);
-            }
+            s_context.Users.Remove(user);
             int result = await s_context.SaveChangesAsync();
 
             return result > 0;
