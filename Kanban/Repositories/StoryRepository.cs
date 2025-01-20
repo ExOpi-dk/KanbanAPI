@@ -24,6 +24,8 @@ namespace Kanban.Repositories
 
         public async Task<bool> CreateStory(Story story)
         {
+            story.Id = default;
+
             await s_context.Stories.AddAsync(story);
             int result = await s_context.SaveChangesAsync();
 
@@ -32,9 +34,13 @@ namespace Kanban.Repositories
 
         public async Task<bool> UpdateStory(Story updatedStory)
         {
-            s_context.Stories.Attach(updatedStory);
-            s_context.Entry(updatedStory).State = EntityState.Modified;
-            return await s_context.SaveChangesAsync() > 0;
+            var existingStory = await s_context.Stories.FindAsync(updatedStory.Id);
+            if (existingStory != null)
+            {
+                s_context.Entry(existingStory).CurrentValues.SetValues(updatedStory);
+                return await s_context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteStory(Story story)

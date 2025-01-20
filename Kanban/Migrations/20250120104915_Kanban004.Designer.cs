@@ -4,6 +4,7 @@ using Kanban.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kanban.Migrations
 {
     [DbContext(typeof(KanbanContext))]
-    partial class KanbanContextModelSnapshot : ModelSnapshot
+    [Migration("20250120104915_Kanban004")]
+    partial class Kanban004
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace Kanban.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
@@ -68,7 +71,7 @@ namespace Kanban.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
@@ -101,7 +104,7 @@ namespace Kanban.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
@@ -140,7 +143,7 @@ namespace Kanban.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime?>("LastUpdated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 

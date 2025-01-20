@@ -30,7 +30,11 @@ namespace Kanban.Services
         {
             bool success = await storyRepository.UpdateStory(story);
 
-            return success ? story : null;
+            if (success) {
+                return await storyRepository.GetStoryById(story.Id);
+            }
+
+            return null;
         }
     }
 }
