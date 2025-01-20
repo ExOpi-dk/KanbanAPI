@@ -24,6 +24,8 @@ namespace Kanban.Repositories
 
         public async Task<bool> CreateStatus(Status status)
         {
+            status.Id = default;
+
             await s_context.Statuses.AddAsync(status);
             int result = await s_context.SaveChangesAsync();
 
@@ -32,9 +34,13 @@ namespace Kanban.Repositories
 
         public async Task<bool> UpdateStatus(Status updatedStatus)
         {
-            s_context.Statuses.Attach(updatedStatus);
-            s_context.Entry(updatedStatus).State = EntityState.Modified;
-            return await s_context.SaveChangesAsync() > 0;
+            var existingStatus = await s_context.Statuses.FindAsync(updatedStatus.Id);
+            if (existingStatus != null)
+            {
+                s_context.Entry(existingStatus).CurrentValues.SetValues(updatedStatus);
+                return await s_context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteStatus(Status status)

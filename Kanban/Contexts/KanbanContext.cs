@@ -28,9 +28,11 @@ namespace Kanban.Contexts
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
                 entity.Property(e => e.Created)
-                    .HasDefaultValueSql("getdate()");
+                    .HasDefaultValueSql("getdate()")
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
                 entity.Property(e => e.LastUpdated)
-                    .HasDefaultValueSql("getdate()");
+                    .HasDefaultValueSql("getdate()")
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
 
             modelBuilder.Entity<Board>(entity =>
@@ -43,9 +45,11 @@ namespace Kanban.Contexts
                     .HasForeignKey(e => e.OwnerId)
                     .OnDelete(DeleteBehavior.Restrict);
                 entity.Property(e => e.Created)
-                    .HasDefaultValueSql("getdate()");
+                    .HasDefaultValueSql("getdate()")
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
                 entity.Property(e => e.LastUpdated)
-                    .HasDefaultValueSql("getdate()");
+                    .HasDefaultValueSql("getdate()")
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
 
             modelBuilder.Entity<Story>(entity =>
@@ -85,9 +89,11 @@ namespace Kanban.Contexts
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
                 entity.Property(e => e.Created)
-                    .HasDefaultValueSql("getdate()");
+                    .HasDefaultValueSql("getdate()")
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
                 entity.Property(e => e.LastUpdated)
-                    .HasDefaultValueSql("getdate()");
+                    .HasDefaultValueSql("getdate()")
+                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
         }
     }
