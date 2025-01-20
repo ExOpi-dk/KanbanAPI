@@ -24,18 +24,23 @@ namespace Kanban.Repositories
 
         public async Task<bool> CreateUser(User user)
         {
+            user.Id = default;
+
             await s_context.Users.AddAsync(user);
             int result = await s_context.SaveChangesAsync();
 
             return result > 0;
         }
 
-        public async Task<bool> UpdateUser(User user)
+        public async Task<bool> UpdateUser(User updatedUser)
         {
-            s_context.Users.Attach(user);
-            s_context.Entry(user).State = EntityState.Modified;
-
-            return await s_context.SaveChangesAsync() > 0;
+            var existingUser = await s_context.Users.FindAsync(updatedUser.Id);
+            if (existingUser != null)
+            {
+                s_context.Entry(existingUser).CurrentValues.SetValues(updatedUser);
+                return await s_context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteUser(User user)

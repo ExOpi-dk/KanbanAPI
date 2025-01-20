@@ -4,7 +4,7 @@ namespace Kanban.Models
 {
     public class Board
     {
-        public int Id { get; }
+        public int Id { get; set; }
         public string? Name { get; set; }
         public int OwnerId { get; set;  }
         [JsonIgnore]

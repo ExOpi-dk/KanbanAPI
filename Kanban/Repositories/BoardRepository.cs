@@ -20,15 +20,23 @@ namespace Kanban.Repositories
 
         public async Task<bool> CreateBoard(Board board)
         {
+            board.Id = default;
+
             await s_context.Boards.AddAsync(board);
-            return await s_context.SaveChangesAsync() > 0;
+            int result = await s_context.SaveChangesAsync();
+
+            return result > 0;
         }
 
         public async Task<bool> UpdateBoard(Board updatedBoard)
         {
-            s_context.Boards.Attach(updatedBoard);
-            s_context.Entry(updatedBoard).State = EntityState.Modified;
-            return await s_context.SaveChangesAsync() > 0;
+            var existingBoard = await s_context.Boards.FindAsync(updatedBoard.Id);
+            if (existingBoard != null)
+            {
+                s_context.Entry(existingBoard).CurrentValues.SetValues(updatedBoard);
+                return await s_context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteBoard(Board board)
