@@ -44,5 +44,32 @@ namespace Kanban.Controllers
                 return BadRequest();
             }
         }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Consumes("application/json")]
+        [HttpPut(Name = "UpsertStatus")]
+        public async Task<IActionResult> UpsertStatus([FromBody] Status requestStatus)
+        {
+            Status? existingStatus = await statusService.GetStatusById(requestStatus.Id);
+
+            if (existingStatus != null)
+            {
+                Status? updatedStory = await statusService.UpdateStatus(requestStatus);
+                if (updatedStory != null)
+                {
+                    return Ok(updatedStory);
+                }
+                return BadRequest();
+            }
+
+            Status? createdStory = await statusService.CreateStatus(requestStatus);
+            if (createdStory != null)
+            {
+                return CreatedAtAction(nameof(UpsertStatus), new { id = createdStory.Id }, createdStory);
+            }
+            return BadRequest();
+        }
     }
 }
