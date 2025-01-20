@@ -21,8 +21,8 @@ PUT {{Kanban_HostAddress}}/story
 Content-Type: application/json
 
 {
-  "id": 1020,
-  "name": "Buy Groceries Now Test2000",
+  "id": 1019,
+  "name": "Buy Groceries Now Test2000+",
   "description": "1 L milk\n\r1 Juicy Lemon",
   "statusId": 1,
   "ownerId": 1,

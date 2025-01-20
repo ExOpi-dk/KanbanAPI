@@ -6,7 +6,7 @@ namespace Kanban.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StatusController(IStatusService statusService) : ControllerBase
+    public class StatusController(IService<Status> statusService) : ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -15,7 +15,7 @@ namespace Kanban.Controllers
         [HttpGet(Name = "GetStatus")]
         public async Task<IActionResult> GetStatus()
         {
-            List<Status> statuses = await statusService.GetStatuses();
+            List<Status> statuses = await statusService.GetAll();
 
             if (statuses.Count > 0)
             {
@@ -32,7 +32,7 @@ namespace Kanban.Controllers
         [HttpPost(Name = "PostStatus")]
         public async Task<IActionResult> PostStatus([FromBody] Status status)
         {
-            Status? newStatus = await statusService.CreateStatus(status);
+            Status? newStatus = await statusService.Create(status);
 
             if (newStatus != null)
             {
@@ -52,11 +52,11 @@ namespace Kanban.Controllers
         [HttpPut(Name = "UpsertStatus")]
         public async Task<IActionResult> UpsertStatus([FromBody] Status requestStatus)
         {
-            Status? existingStatus = await statusService.GetStatusById(requestStatus.Id);
+            Status? existingStatus = await statusService.GetById(requestStatus.Id);
 
             if (existingStatus != null)
             {
-                Status? updatedStory = await statusService.UpdateStatus(requestStatus);
+                Status? updatedStory = await statusService.Update(requestStatus);
                 if (updatedStory != null)
                 {
                     return Ok(updatedStory);
@@ -64,7 +64,7 @@ namespace Kanban.Controllers
                 return BadRequest();
             }
 
-            Status? createdStory = await statusService.CreateStatus(requestStatus);
+            Status? createdStory = await statusService.Create(requestStatus);
             if (createdStory != null)
             {
                 return CreatedAtAction(nameof(UpsertStatus), new { id = createdStory.Id }, createdStory);

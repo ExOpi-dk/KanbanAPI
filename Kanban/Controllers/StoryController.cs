@@ -6,7 +6,7 @@ namespace Kanban.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class StoryController(IStoryService storyService) : ControllerBase
+    public class StoryController(IService<Story> storyService) : ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -15,7 +15,7 @@ namespace Kanban.Controllers
         [HttpGet(Name = "GetStory")]
         public async Task<IActionResult> GetStory()
         {
-            List<Story> stories = await storyService.GetStories();
+            List<Story> stories = await storyService.GetAll();
 
             if (stories.Count > 0)
             {
@@ -32,7 +32,7 @@ namespace Kanban.Controllers
         [HttpPost(Name = "PostStory")]
         public async Task<IActionResult> PostStory([FromBody] Story story)
         {
-            Story? newStory = await storyService.CreateStory(story);
+            Story? newStory = await storyService.Create(story);
 
             if (newStory != null)
             {
@@ -52,11 +52,11 @@ namespace Kanban.Controllers
         [HttpPut(Name = "UpsertStory")]
         public async Task<IActionResult> UpsertStory([FromBody] Story requestStory)
         {
-            Story? existingStory = await storyService.GetStoryById(requestStory.Id);
+            Story? existingStory = await storyService.GetById(requestStory.Id);
 
             if (existingStory != null)
             {
-                Story? updatedStory = await storyService.UpdateStory(requestStory);
+                Story? updatedStory = await storyService.Update(requestStory);
                 if (updatedStory != null)
                 {
                     return Ok(updatedStory);
@@ -64,7 +64,7 @@ namespace Kanban.Controllers
                 return BadRequest();
             }
 
-            Story? createdStory = await storyService.CreateStory(requestStory);
+            Story? createdStory = await storyService.Create(requestStory);
             if (createdStory != null)
             {
                 return CreatedAtAction(nameof(UpsertStory), new { id = createdStory.Id }, createdStory);

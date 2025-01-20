@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kanban.Repositories
 {
-    public class Repository<T> where T : Dto
+    public class Repository<T> : IRepository<T> where T : Dto
     {
         private static readonly KanbanContext s_context = new();
 
         public async Task<T?> GetById(int id)
         {
             T? dto = await s_context.FindAsync<T>(id);
-            
+
             return dto;
         }
 
