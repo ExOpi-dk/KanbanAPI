@@ -12,9 +12,9 @@ namespace Kanban.Services
             return statuses;
         }
 
-        public async Task<Status?> PostStatus(Status status)
+        public async Task<Status?> CreateStatus(Status status)
         {
-            bool success = await statusRepository.PostStatus(status);
+            bool success = await statusRepository.CreateStatus(status);
 
             return success ? status : null;
         }

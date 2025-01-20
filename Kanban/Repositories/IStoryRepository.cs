@@ -7,7 +7,7 @@ namespace Kanban.Repositories
         Task<bool> DeleteStory(Story story);
         Task<List<Story>> GetAllStories();
         Task<Story?> GetStoryById(int id);
-        Task<bool> PostStory(Story story);
+        Task<bool> CreateStory(Story story);
         Task<bool> UpdateStory(Story updatedStory);
     }
 }

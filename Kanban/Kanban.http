@@ -17,6 +17,20 @@ Content-Type: application/json
 
 ###
 
+PUT {{Kanban_HostAddress}}/story
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Buy Groceries",
+  "description": "1 L milk\n\r1 Juicy Lemon",
+  "statusId": 1,
+  "ownerId": 1,
+  "boardId": 1
+}
+
+###
+
 GET {{Kanban_HostAddress}}/user
 Accept: application/json
 
@@ -64,6 +78,16 @@ Accept: application/json
 ###
 
 POST {{Kanban_HostAddress}}/status
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "NewStatus"
+}
+
+###
+
+PUT {{Kanban_HostAddress}}/status
 Content-Type: application/json
 
 {

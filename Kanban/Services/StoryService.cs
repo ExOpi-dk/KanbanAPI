@@ -12,9 +12,23 @@ namespace Kanban.Services
             return stories;
         }
 
-        public async Task<Story?> PostStory(Story story)
+        public async Task<Story?> GetStoryById(int id)
         {
-            bool success = await storyRepository.PostStory(story);
+            Story? story = await storyRepository.GetStoryById(id);
+
+            return story;
+        }
+
+        public async Task<Story?> CreateStory(Story story)
+        {
+            bool success = await storyRepository.CreateStory(story);
+
+            return success ? story : null;
+        }
+
+        public async Task<Story?> UpdateStory(Story story)
+        {
+            bool success = await storyRepository.UpdateStory(story);
 
             return success ? story : null;
         }

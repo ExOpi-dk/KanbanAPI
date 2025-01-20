@@ -1,4 +1,5 @@
-﻿using Kanban.Models;
+﻿using Kanban.Enums;
+using Kanban.Models;
 using Kanban.Repositories;
 
 namespace Kanban.Services
@@ -21,7 +22,7 @@ namespace Kanban.Services
 
         public async Task<User?> CreateUser(User user)
         {
-            bool success = await userRepository.PostUser(user);
+            bool success = await userRepository.CreateUser(user);
 
             return success ? user : null;
         }
@@ -31,6 +32,19 @@ namespace Kanban.Services
             bool success = await userRepository.UpdateUser(user);
 
             return success ? user : null;
+        }
+
+        public async Task<DeleteResult> DeleteUser(int id)
+        {
+            User? user = await userRepository.GetUserById(id);
+
+            if (user != null)
+            {
+                bool success = await userRepository.DeleteUser(user);
+                return success ? DeleteResult.Success : DeleteResult.Error;
+            }
+
+            return DeleteResult.NotFound;
         }
     }
 }

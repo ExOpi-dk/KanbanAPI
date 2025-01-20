@@ -1,6 +1,7 @@
 using Kanban.Models;
 using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
+using Kanban.Enums;
 
 namespace Kanban.Controllers
 {
@@ -27,7 +28,6 @@ namespace Kanban.Controllers
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [HttpPost(Name = "PostUser")]
         public async Task<IActionResult> PostUser([FromBody] User user)
@@ -48,7 +48,6 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [HttpPut(Name = "UpsertUser")]
         public async Task<IActionResult> UpsertUser([FromBody] User requestUser)
@@ -71,6 +70,27 @@ namespace Kanban.Controllers
                 return CreatedAtAction(nameof(UpsertUser), new { id = createdUser.Id }, createdUser);
             }
             return BadRequest();
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete(Name = "DeleteUser")]
+        public async Task<IActionResult> DeleteUser([FromQuery] int id)
+        {
+            DeleteResult result = await userService.DeleteUser(id);
+
+            switch (result)
+            {
+                case DeleteResult.Success:
+                    return NoContent();
+                case DeleteResult.Error:
+                    return BadRequest();
+                case DeleteResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
+            }
         }
     }
 }

@@ -4,10 +4,12 @@ namespace Kanban.Models
 {
     public class Board
     {
-        public required int Id { get; set; }
-        public required string Name { get; set; }
-        public required int OwnerId { get; set; }
+        public int Id { get; }
+        public string? Name { get; set; }
+        public int OwnerId { get; set;  }
         [JsonIgnore]
         public User? Owner { get; set; }
+        public DateTime Created { get; }
+        public DateTime? LastUpdated { get; }
     }
 }

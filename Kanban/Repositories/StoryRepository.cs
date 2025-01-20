@@ -22,10 +22,8 @@ namespace Kanban.Repositories
             return stories;
         }
 
-        public async Task<bool> PostStory(Story story)
+        public async Task<bool> CreateStory(Story story)
         {
-            story.Id = default;
-
             await s_context.Stories.AddAsync(story);
             int result = await s_context.SaveChangesAsync();
 

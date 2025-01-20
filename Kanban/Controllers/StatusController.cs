@@ -32,7 +32,7 @@ namespace Kanban.Controllers
         [HttpPost(Name = "PostStatus")]
         public async Task<IActionResult> PostStatus([FromBody] Status status)
         {
-            Status? newStatus = await statusService.PostStatus(status);
+            Status? newStatus = await statusService.CreateStatus(status);
 
             if (newStatus != null)
             {

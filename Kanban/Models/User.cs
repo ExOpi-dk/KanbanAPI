@@ -2,7 +2,9 @@
 {
     public class User
     {
-        public required int Id { get; set; }
-        public required string Name { get; set; }
+        public int Id { get; }
+        public string? Name { get; set; }
+        public DateTime Created { get; }
+        public DateTime? LastUpdated { get; }
     }
 }
