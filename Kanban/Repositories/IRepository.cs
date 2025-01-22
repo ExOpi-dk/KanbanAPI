@@ -1,5 +1,4 @@
-﻿using Kanban.Enums;
-using Kanban.Models;
+﻿using Kanban.Models;
 
 namespace Kanban.Repositories
 {
@@ -9,6 +8,6 @@ namespace Kanban.Repositories
         Task<bool> Delete(T dto);
         Task<List<T>> GetAll();
         Task<T?> GetById(int id);
-        Task<bool> Update();
+        Task<bool> Update(T updatedDto);
     }
 }

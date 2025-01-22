@@ -81,7 +81,8 @@ Content-Type: application/json
 {
   "id": 1,
   "name": "NewBoard",
-  "ownerId": "1"
+  "ownerId": "1",
+  "created": "2050-01-22T11:24:51.5633333"
 }
 
 ###
@@ -91,7 +92,7 @@ Content-Type: application/json-patch+json
 
 [
   {
-    "op": "replace", "path": "/name", "value": "UpdatedBoard"
+    "op": "replace", "path": "/lastUpdated", "value": "2040-01-22T11:24:51.5633333"
   }
 ]
 
