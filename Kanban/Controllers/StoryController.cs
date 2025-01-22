@@ -2,6 +2,7 @@ using Kanban.Models;
 using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
+using Kanban.Enums;
 
 namespace Kanban.Controllers
 {
@@ -46,31 +47,37 @@ namespace Kanban.Controllers
             }
         }
 
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[Consumes("application/json")]
-        //[HttpPut(Name = "UpsertStory")]
-        //public async Task<IActionResult> UpsertStory([FromBody] Story requestStory)
-        //{
-        //    Story? existingStory = await storyService.GetById(requestStory.Id);
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json-patch+json")]
+        [HttpPatch("{id}", Name = "PatchStory")]
+        public async Task<IActionResult> PatchStory(int id, [FromBody] JsonPatchDocument<Story> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
 
-        //    if (existingStory != null)
-        //    {
-        //        Story? updatedStory = await storyService.Update(requestStory);
-        //        if (updatedStory != null)
-        //        {
-        //            return Ok(updatedStory);
-        //        }
-        //        return BadRequest();
-        //    }
+            OperationResult result = await storyService.Update(id, story =>
+            {
+                if (story != null)
+                {
+                    patchDoc.ApplyTo(story);
+                }
+            });
 
-        //    Story? createdStory = await storyService.Create(requestStory);
-        //    if (createdStory != null)
-        //    {
-        //        return CreatedAtAction(nameof(UpsertStory), new { id = createdStory.Id }, createdStory);
-        //    }
-        //    return BadRequest();
-        //}
+            switch (result)
+            {
+                case OperationResult.Success:
+                    return NoContent();
+                case OperationResult.Error:
+                    return BadRequest();
+                case OperationResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
+            }
+        }
     }
 }
