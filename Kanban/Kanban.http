@@ -87,7 +87,8 @@ Content-Type: application/json
 
 ###
 
-PATCH {{Kanban_HostAddress}}/board/1
+@id=0
+PATCH {{Kanban_HostAddress}}/board/{{id}}
 Content-Type: application/json-patch+json
 
 [
