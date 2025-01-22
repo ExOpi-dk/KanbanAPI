@@ -9,6 +9,6 @@ namespace Kanban.Repositories
         Task<bool> Delete(T dto);
         Task<List<T>> GetAll();
         Task<T?> GetById(int id);
-        Task<OperationResult> Update(int id, Action<T?> updateAction);
+        Task<bool> Update();
     }
 }

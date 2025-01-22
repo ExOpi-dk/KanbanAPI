@@ -30,7 +30,15 @@ namespace Kanban.Services
 
         public async Task<OperationResult> Update(int id, Action<T?> updateAction)
         {
-            return await repository.Update(id, updateAction);
+            T? dto = await repository.GetById(id);
+            if (dto == null)
+            {
+                return OperationResult.NotFound;
+            }
+
+            updateAction(dto);
+
+            return await repository.Update() ? OperationResult.Success : OperationResult.Error;
         }
 
         public async Task<OperationResult> Delete(int id)

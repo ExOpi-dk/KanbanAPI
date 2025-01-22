@@ -33,19 +33,11 @@ namespace Kanban.Repositories
             return result > 0;
         }
 
-        public async Task<OperationResult> Update(int id, Action<T?> updateAction)
+        public async Task<bool> Update()
         {
-            T? dto = await s_context.FindAsync<T>(id);
-            if (dto == null)
-            {
-                return OperationResult.NotFound;
-            }
-
-            updateAction(dto);
-
             int result = await s_context.SaveChangesAsync();
 
-            return result > 0 ? OperationResult.Success : OperationResult.Error;
+            return result > 0;
         }
 
         public async Task<bool> Delete(T dto)
