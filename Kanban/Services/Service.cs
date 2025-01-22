@@ -36,7 +36,9 @@ namespace Kanban.Services
                 return await repository.GetById(dto.Id);
             }
 
-            return null;
+            updateAction(dto);
+
+            return await repository.Update(dto) ? OperationResult.Success : OperationResult.Error;
         }
 
         public async Task<DeleteResult> Delete(int id)
