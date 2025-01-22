@@ -2,6 +2,7 @@ using Kanban.Models;
 using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
+using Kanban.Enums;
 
 namespace Kanban.Controllers
 {
@@ -56,24 +57,27 @@ namespace Kanban.Controllers
             if (patchDoc == null)
             {
                 return BadRequest();
-            }            
-
-            var board = await boardService.GetById(id);
-            if (board == null)
-            {
-                return NotFound();
             }
 
-            patchDoc.ApplyTo(board);
-
-            if (!ModelState.IsValid)
+            OperationResult result = await boardService.Update(id, board =>
             {
-                return BadRequest(ModelState);
+                if (board != null)
+                {
+                    patchDoc.ApplyTo(board);
+                }
+            });
+
+            switch (result)
+            {
+                case OperationResult.Success:
+                    return NoContent();
+                case OperationResult.Error:
+                    return BadRequest();
+                case OperationResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
             }
-
-            await boardService.Update(board);
-
-            return NoContent();
         }
     }
 }

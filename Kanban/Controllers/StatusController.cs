@@ -45,31 +45,31 @@ namespace Kanban.Controllers
             }
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Consumes("application/json")]
-        [HttpPut(Name = "UpsertStatus")]
-        public async Task<IActionResult> UpsertStatus([FromBody] Status requestStatus)
-        {
-            Status? existingStatus = await statusService.GetById(requestStatus.Id);
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[Consumes("application/json")]
+        //[HttpPut(Name = "UpsertStatus")]
+        //public async Task<IActionResult> UpsertStatus([FromBody] Status requestStatus)
+        //{
+        //    Status? existingStatus = await statusService.GetById(requestStatus.Id);
 
-            if (existingStatus != null)
-            {
-                Status? updatedStory = await statusService.Update(requestStatus);
-                if (updatedStory != null)
-                {
-                    return Ok(updatedStory);
-                }
-                return BadRequest();
-            }
+        //    if (existingStatus != null)
+        //    {
+        //        Status? updatedStory = await statusService.Update(requestStatus);
+        //        if (updatedStory != null)
+        //        {
+        //            return Ok(updatedStory);
+        //        }
+        //        return BadRequest();
+        //    }
 
-            Status? createdStory = await statusService.Create(requestStatus);
-            if (createdStory != null)
-            {
-                return CreatedAtAction(nameof(UpsertStatus), new { id = createdStory.Id }, createdStory);
-            }
-            return BadRequest();
-        }
+        //    Status? createdStory = await statusService.Create(requestStatus);
+        //    if (createdStory != null)
+        //    {
+        //        return CreatedAtAction(nameof(UpsertStatus), new { id = createdStory.Id }, createdStory);
+        //    }
+        //    return BadRequest();
+        //}
     }
 }

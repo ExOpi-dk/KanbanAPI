@@ -1,4 +1,5 @@
 ﻿using Kanban.Contexts;
+using Kanban.Enums;
 using Kanban.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,15 +33,19 @@ namespace Kanban.Repositories
             return result > 0;
         }
 
-        public async Task<bool> Update(T updatedDto)
+        public async Task<OperationResult> Update(int id, Action<T?> updateAction)
         {
-            T? existingDto = await s_context.FindAsync<T>(updatedDto.Id);
-            if (existingDto != null)
+            T? dto = await s_context.FindAsync<T>(id);
+            if (dto == null)
             {
-                s_context.Entry(existingDto).CurrentValues.SetValues(updatedDto);
-                return await s_context.SaveChangesAsync() > 0;
+                return OperationResult.NotFound;
             }
-            return false;
+
+            updateAction(dto);
+
+            int result = await s_context.SaveChangesAsync();
+
+            return result > 0 ? OperationResult.Success : OperationResult.Error;
         }
 
         public async Task<bool> Delete(T dto)

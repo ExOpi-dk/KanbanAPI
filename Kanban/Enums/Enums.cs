@@ -1,6 +1,6 @@
 ﻿namespace Kanban.Enums
 {
-    public enum DeleteResult
+    public enum OperationResult
     {
         Success,
         NotFound,

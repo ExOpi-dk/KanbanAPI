@@ -45,32 +45,32 @@ namespace Kanban.Controllers
             }
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Consumes("application/json")]
-        [HttpPut(Name = "UpsertUser")]
-        public async Task<IActionResult> UpsertUser([FromBody] User requestUser)
-        {
-            User? existingUser = await userService.GetById(requestUser.Id);
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[Consumes("application/json")]
+        //[HttpPut(Name = "UpsertUser")]
+        //public async Task<IActionResult> UpsertUser([FromBody] User requestUser)
+        //{
+        //    User? existingUser = await userService.GetById(requestUser.Id);
 
-            if (existingUser != null)
-            {
-                User? updatedUser = await userService.Update(requestUser);
-                if (updatedUser != null)
-                {
-                    return Ok(updatedUser);
-                }
-                return BadRequest();
-            }
+        //    if (existingUser != null)
+        //    {
+        //        User? updatedUser = await userService.Update(requestUser);
+        //        if (updatedUser != null)
+        //        {
+        //            return Ok(updatedUser);
+        //        }
+        //        return BadRequest();
+        //    }
 
-            User? createdUser = await userService.Create(requestUser);
-            if (createdUser != null)
-            {
-                return CreatedAtAction(nameof(UpsertUser), new { id = createdUser.Id }, createdUser);
-            }
-            return BadRequest();
-        }
+        //    User? createdUser = await userService.Create(requestUser);
+        //    if (createdUser != null)
+        //    {
+        //        return CreatedAtAction(nameof(UpsertUser), new { id = createdUser.Id }, createdUser);
+        //    }
+        //    return BadRequest();
+        //}
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -78,15 +78,15 @@ namespace Kanban.Controllers
         [HttpDelete(Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUser([FromQuery] int id)
         {
-            DeleteResult result = await userService.Delete(id);
+            OperationResult result = await userService.Delete(id);
 
             switch (result)
             {
-                case DeleteResult.Success:
+                case OperationResult.Success:
                     return NoContent();
-                case DeleteResult.Error:
+                case OperationResult.Error:
                     return BadRequest();
-                case DeleteResult.NotFound:
+                case OperationResult.NotFound:
                     return NotFound();
                 default:
                     return BadRequest();
