@@ -1,6 +1,6 @@
 ﻿using Kanban.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Kanban.Contexts
 {
@@ -27,12 +27,6 @@ namespace Kanban.Contexts
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
-                entity.Property(e => e.Created)
-                    .HasDefaultValueSql("getdate()")
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
-                entity.Property(e => e.LastUpdated)
-                    .HasDefaultValueSql("getdate()")
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
 
             modelBuilder.Entity<Board>(entity =>
@@ -44,12 +38,6 @@ namespace Kanban.Contexts
                     .WithMany()
                     .HasForeignKey(e => e.OwnerId)
                     .OnDelete(DeleteBehavior.Restrict);
-                entity.Property(e => e.Created)
-                    .HasDefaultValueSql("getdate()")
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
-                entity.Property(e => e.LastUpdated)
-                    .HasDefaultValueSql("getdate()")
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
 
             modelBuilder.Entity<Story>(entity =>
@@ -74,27 +62,29 @@ namespace Kanban.Contexts
                     .HasForeignKey(e => e.StatusId)
                     .OnDelete(DeleteBehavior.Restrict);
                 entity.Property(e => e.Description).IsRequired(false);
-                entity.Property(e => e.Created)
-                    .HasDefaultValueSql("getdate()")
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
-                entity.Property(e => e.LastUpdated)
-                    .HasDefaultValueSql("getdate()")
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
-
-            modelBuilder.Entity<Story>().ToTable(tb => tb.HasTrigger("Stories_UPDATE"));
 
             modelBuilder.Entity<Status>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired();
-                entity.Property(e => e.Created)
-                    .HasDefaultValueSql("getdate()")
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
-                entity.Property(e => e.LastUpdated)
-                    .HasDefaultValueSql("getdate()")
-                    .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
             });
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries().Where(e => e.Entity is ITrackable && (e.State == EntityState.Added || e.State == EntityState.Modified));
+
+            foreach (var entry in entries)
+            {
+                ((ITrackable)entry.Entity).LastUpdated = DateTime.Now;
+
+                if (entry.State == EntityState.Added)
+                {
+                    ((ITrackable)entry.Entity).Created = DateTime.Now;
+                }
+            }
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
