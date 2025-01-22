@@ -72,6 +72,17 @@ Content-Type: application/json
 
 ###
 
+PATCH {{Kanban_HostAddress}}/board/1
+Content-Type: application/json-patch+json
+
+[
+  {
+    "op": "replace", "path": "/name", "value": "UpdatedBoard"
+  }
+]
+
+###
+
 GET {{Kanban_HostAddress}}/status
 Accept: application/json
 
