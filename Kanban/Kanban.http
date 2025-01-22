@@ -91,7 +91,7 @@ Content-Type: application/json-patch+json
 
 [
   {
-    "op": "replace", "path": "/name", "value": "NewBoard+"
+    "op": "replace", "path": "/name", "value": "UpdatedBoard"
   }
 ]
 
