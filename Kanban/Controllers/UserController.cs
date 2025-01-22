@@ -50,9 +50,11 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Consumes("application/json")]
-        [HttpPut(Name = "UpsertUser")]
-        public async Task<IActionResult> UpsertUser([FromBody] User requestUser)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        [Consumes("application/json-patch+json")]
+        [HttpPatch("{id}", Name = "PatchUser")]
+        public async Task<IActionResult> PatchUser(int id, [FromBody] JsonPatchDocument<User> patchDoc)
         {
             User? existingUser = await userService.GetById(requestUser.Id);
 

@@ -30,7 +30,6 @@ namespace Kanban.Controllers
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [HttpPost(Name = "PostBoard")]
         public async Task<IActionResult> PostBoard([FromBody] Board board)
@@ -51,6 +50,7 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         [Consumes("application/json-patch+json")]
         [HttpPatch("{id}", Name = "PatchBoard")]
         public async Task<IActionResult> PatchBoard(int id, [FromBody] JsonPatchDocument<Board> patchDoc)
