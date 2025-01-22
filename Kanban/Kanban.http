@@ -87,11 +87,13 @@ Content-Type: application/json
 ###
 
 PATCH {{Kanban_HostAddress}}/board/1
-Content-Type: application/json
+Content-Type: application/json-patch+json
 
-{
-  "name": "NewBoard++"
-}
+[
+  {
+    "op": "replace", "path": "/name", "value": "NewBoard++"
+  }
+]
 
 ###
 

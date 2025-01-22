@@ -49,14 +49,14 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Consumes("application/json")]
+        [Consumes("application/json-patch+json")]
         [HttpPatch("{id}", Name = "PatchBoard")]
         public async Task<IActionResult> PatchBoard(int id, [FromBody] JsonPatchDocument<Board> patchDoc)
         {
             if (patchDoc == null)
             {
                 return BadRequest();
-            }
+            }            
 
             var board = await boardService.GetById(id);
             if (board == null)
@@ -70,6 +70,8 @@ namespace Kanban.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            await boardService.Update(board);
 
             return NoContent();
         }
