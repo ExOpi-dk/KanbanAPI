@@ -2,6 +2,8 @@ using Kanban.Models;
 using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
 using Kanban.Enums;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Exceptions;
 
 namespace Kanban.Controllers
 {
@@ -67,9 +69,30 @@ namespace Kanban.Controllers
             User? createdUser = await userService.Create(requestUser);
             if (createdUser != null)
             {
-                return CreatedAtAction(nameof(UpsertUser), new { id = createdUser.Id }, createdUser);
+                if (user != null)
+                {
+                    try
+                    {
+                        patchDoc.ApplyTo(user);
+                    }
+                    catch (JsonPatchException)
+                    {
+                        result = OperationResult.Error;
+                    }
+                }
+            });
+
+            switch (result)
+            {
+                case OperationResult.Success:
+                    return NoContent();
+                case OperationResult.Error:
+                    return BadRequest();
+                case OperationResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
             }
-            return BadRequest();
         }
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]

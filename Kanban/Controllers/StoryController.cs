@@ -1,6 +1,9 @@
 using Kanban.Models;
 using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
+using Kanban.Enums;
+using Microsoft.AspNetCore.JsonPatch.Exceptions;
 
 namespace Kanban.Controllers
 {
@@ -64,12 +67,32 @@ namespace Kanban.Controllers
                 return BadRequest();
             }
 
-            Story? createdStory = await storyService.Create(requestStory);
-            if (createdStory != null)
+            OperationResult result = await storyService.Update(id, story =>
             {
-                return CreatedAtAction(nameof(UpsertStory), new { id = createdStory.Id }, createdStory);
+                if (story != null)
+                {
+                    try
+                    {
+                        patchDoc.ApplyTo(story);
+                    }
+                    catch (JsonPatchException)
+                    {
+                        result = OperationResult.Error;
+                    }
+                }
+            });
+
+            switch (result)
+            {
+                case OperationResult.Success:
+                    return NoContent();
+                case OperationResult.Error:
+                    return BadRequest();
+                case OperationResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
             }
-            return BadRequest();
         }
     }
 }
