@@ -7,7 +7,7 @@ namespace Kanban.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController(IUserService userService) : ControllerBase
+    public class UserController(IService<User> userService) : ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -16,7 +16,7 @@ namespace Kanban.Controllers
         [HttpGet(Name = "GetUser")]
         public async Task<IActionResult> GetUser()
         {
-            List<User> users = await userService.GetUsers();
+            List<User> users = await userService.GetAll();
 
             if (users.Count > 0)
             {
@@ -32,7 +32,7 @@ namespace Kanban.Controllers
         [HttpPost(Name = "PostUser")]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
-            User? newUser = await userService.CreateUser(user);
+            User? newUser = await userService.Create(user);
 
             if (newUser != null)
             {
@@ -52,11 +52,11 @@ namespace Kanban.Controllers
         [HttpPut(Name = "UpsertUser")]
         public async Task<IActionResult> UpsertUser([FromBody] User requestUser)
         {
-            User? existingUser = await userService.GetUserById(requestUser.Id);
+            User? existingUser = await userService.GetById(requestUser.Id);
 
             if (existingUser != null)
             {
-                User? updatedUser = await userService.UpdateUser(requestUser);
+                User? updatedUser = await userService.Update(requestUser);
                 if (updatedUser != null)
                 {
                     return Ok(updatedUser);
@@ -64,7 +64,7 @@ namespace Kanban.Controllers
                 return BadRequest();
             }
 
-            User? createdUser = await userService.CreateUser(requestUser);
+            User? createdUser = await userService.Create(requestUser);
             if (createdUser != null)
             {
                 return CreatedAtAction(nameof(UpsertUser), new { id = createdUser.Id }, createdUser);
@@ -78,7 +78,7 @@ namespace Kanban.Controllers
         [HttpDelete(Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUser([FromQuery] int id)
         {
-            DeleteResult result = await userService.DeleteUser(id);
+            DeleteResult result = await userService.Delete(id);
 
             switch (result)
             {

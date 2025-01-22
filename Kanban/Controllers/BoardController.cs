@@ -6,7 +6,7 @@ namespace Kanban.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BoardController(IBoardService boardService) : ControllerBase
+    public class BoardController(IService<Board> boardService) : ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -15,7 +15,7 @@ namespace Kanban.Controllers
         [HttpGet(Name = "GetBoard")]
         public async Task<IActionResult> GetBoard()
         {
-            List<Board> boards = await boardService.GetBoards();
+            List<Board> boards = await boardService.GetAll();
 
             if (boards.Count > 0)
             {
@@ -32,7 +32,7 @@ namespace Kanban.Controllers
         [HttpPost(Name = "PostBoard")]
         public async Task<IActionResult> PostBoard([FromBody] Board board)
         {
-            Board? newBoard = await boardService.CreateBoard(board);
+            Board? newBoard = await boardService.Create(board);
 
             if (newBoard != null)
             {

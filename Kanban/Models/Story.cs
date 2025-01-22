@@ -3,10 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace Kanban.Models
 {
-    public class Story
+    public class Story : Dto
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
         public string? Description { get; set; }
         public int OwnerId { get; set;  }
         [JsonIgnore]
@@ -21,7 +19,5 @@ namespace Kanban.Models
         public int? StatusId { get; set; }
         [JsonIgnore]
         public Status? Status { get; set; }
-        public DateTime Created { get; }
-        public DateTime? LastUpdated { get; }
     }
 }

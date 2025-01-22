@@ -2,14 +2,10 @@
 
 namespace Kanban.Models
 {
-    public class Board
+    public class Board : Dto
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
         public int OwnerId { get; set;  }
         [JsonIgnore]
         public User? Owner { get; set; }
-        public DateTime Created { get; }
-        public DateTime? LastUpdated { get; }
     }
 }
