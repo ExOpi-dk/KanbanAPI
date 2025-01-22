@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Kanban.Models
 {
-    public class Dto : ITrackable
+    public abstract class Dto : ITrackable
     {
         [ReadOnly(true)]
         public int Id { get; }

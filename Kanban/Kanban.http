@@ -87,13 +87,13 @@ Content-Type: application/json
 
 ###
 
-@id=0
+@id=1
 PATCH {{Kanban_HostAddress}}/board/{{id}}
 Content-Type: application/json-patch+json
 
 [
   {
-    "op": "replace", "path": "/id", "value": "50000000"
+    "op": "replace", "path": "/name", "value": "New"
   }
 ]
 

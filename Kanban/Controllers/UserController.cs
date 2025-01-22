@@ -1,112 +1,35 @@
 using Kanban.Models;
 using Kanban.Services;
-using Microsoft.AspNetCore.Mvc;
-using Kanban.Enums;
 using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Kanban.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController(IService<User> userService) : ControllerBase
+    [Tags("User")]
+    public class UserController(IService<User> userService) : DtoController<User>(userService)
     {
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/json")]
-        [Produces<List<User>>]
-        [HttpGet(Name = "GetUser")]
-        public async Task<IActionResult> GetUser()
+        [EndpointSummary("Get all users")]
+        [EndpointDescription("Returns every user")]
+        public override async Task<IActionResult> Get()
         {
-            List<User> users = await userService.GetAll();
-
-            if (users.Count > 0)
-            {
-                return Ok(users);
-            }
-
-            return NotFound();
+            return await base.Get();
         }
 
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Consumes("application/json")]
-        [HttpPost(Name = "PostUser")]
-        public async Task<IActionResult> PostUser([FromBody] User user)
+        public override async Task<IActionResult> Post([FromBody] User user)
         {
-            User? newUser = await userService.Create(user);
-
-            if (newUser != null)
-            {
-                return CreatedAtAction(nameof(PostUser),
-                    new { id = newUser.Id }, newUser);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return await base.Post(user);
         }
 
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
-        [Consumes("application/json-patch+json")]
-        [HttpPatch("{id}", Name = "PatchUser")]
-        public async Task<IActionResult> PatchUser(int id, [FromBody] JsonPatchDocument<User> patchDoc)
+        public override async Task<IActionResult> Patch(int id, [FromBody] JsonPatchDocument<User> patchDoc)
         {
-            if (patchDoc == null)
-            {
-                return BadRequest();
-            }
-
-            OperationResult result = await userService.Update(id, user =>
-            {
-                if (user != null)
-                {
-                    try
-                    {
-                        patchDoc.ApplyTo(user);
-                    }
-                    catch (JsonPatchException)
-                    {
-                        result = OperationResult.Error;
-                    }
-                }
-            });
-
-            switch (result)
-            {
-                case OperationResult.Success:
-                    return NoContent();
-                case OperationResult.Error:
-                    return BadRequest();
-                case OperationResult.NotFound:
-                    return NotFound();
-                default:
-                    return BadRequest();
-            }
+            return await base.Patch(id, patchDoc);
         }
 
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpDelete(Name = "DeleteUser")]
-        public async Task<IActionResult> DeleteUser([FromQuery] int id)
+        public override async Task<IActionResult> Delete(int id)
         {
-            OperationResult result = await userService.Delete(id);
-
-            switch (result)
-            {
-                case OperationResult.Success:
-                    return NoContent();
-                case OperationResult.Error:
-                    return BadRequest();
-                case OperationResult.NotFound:
-                    return NotFound();
-                default:
-                    return BadRequest();
-            }
+            return await base.Delete(id);
         }
     }
 }
