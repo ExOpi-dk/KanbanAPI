@@ -79,5 +79,26 @@ namespace Kanban.Controllers
                     return BadRequest();
             }
         }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete(Name = "DeletBoard")]
+        public async Task<IActionResult> DeleteBoard([FromQuery] int id)
+        {
+            OperationResult result = await boardService.Delete(id);
+
+            switch (result)
+            {
+                case OperationResult.Success:
+                    return NoContent();
+                case OperationResult.Error:
+                    return BadRequest();
+                case OperationResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
+            }
+        }
     }
 }
