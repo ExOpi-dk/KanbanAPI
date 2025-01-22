@@ -1,6 +1,8 @@
 using Kanban.Models;
 using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
+using Kanban.Enums;
 
 namespace Kanban.Controllers
 {
@@ -42,6 +44,39 @@ namespace Kanban.Controllers
             else
             {
                 return BadRequest();
+            }
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json-patch+json")]
+        [HttpPatch("{id}", Name = "PatchBoard")]
+        public async Task<IActionResult> PatchBoard(int id, [FromBody] JsonPatchDocument<Board> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
+
+            OperationResult result = await boardService.Update(id, board =>
+            {
+                if (board != null)
+                {
+                    patchDoc.ApplyTo(board);
+                }
+            });
+
+            switch (result)
+            {
+                case OperationResult.Success:
+                    return NoContent();
+                case OperationResult.Error:
+                    return BadRequest();
+                case OperationResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
             }
         }
     }

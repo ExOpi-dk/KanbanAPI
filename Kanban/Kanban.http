@@ -31,6 +31,20 @@ Content-Type: application/json
 
 ###
 
+PATCH {{Kanban_HostAddress}}/story
+Content-Type: application/json
+
+{
+  "id": 1019,
+  "name": "Buy Groceries Now Test2000+",
+  "description": "1 L milk\n\r1 Juicy Lemon",
+  "statusId": 1,
+  "ownerId": 1,
+  "boardId": 1
+}
+
+###
+
 GET {{Kanban_HostAddress}}/user
 Accept: application/json
 
@@ -69,6 +83,17 @@ Content-Type: application/json
   "name": "NewBoard",
   "ownerId": "1"
 }
+
+###
+
+PATCH {{Kanban_HostAddress}}/board/1
+Content-Type: application/json-patch+json
+
+[
+  {
+    "op": "replace", "path": "/name", "value": "NewBoard+"
+  }
+]
 
 ###
 

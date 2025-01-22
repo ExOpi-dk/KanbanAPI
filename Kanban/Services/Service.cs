@@ -1,6 +1,7 @@
 ﻿using Kanban.Enums;
 using Kanban.Models;
 using Kanban.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Kanban.Services
 {
@@ -27,29 +28,30 @@ namespace Kanban.Services
             return success ? dto : null;
         }
 
-        public async Task<T?> Update(T dto)
+        public async Task<OperationResult> Update(int id, Action<T?> updateAction)
         {
-            bool success = await repository.Update(dto);
-
-            if (success)
+            T? dto = await repository.GetById(id);
+            if (dto == null)
             {
-                return await repository.GetById(dto.Id);
+                return OperationResult.NotFound;
             }
 
-            return null;
+            updateAction(dto);
+
+            return await repository.Update() ? OperationResult.Success : OperationResult.Error;
         }
 
-        public async Task<DeleteResult> Delete(int id)
+        public async Task<OperationResult> Delete(int id)
         {
             T? dto = await repository.GetById(id);
 
             if (dto != null)
             {
                 bool success = await repository.Delete(dto);
-                return success ? DeleteResult.Success : DeleteResult.Error;
+                return success ? OperationResult.Success : OperationResult.Error;
             }
 
-            return DeleteResult.NotFound;
+            return OperationResult.NotFound;
         }
     }
 }

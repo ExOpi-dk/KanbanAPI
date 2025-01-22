@@ -1,14 +1,15 @@
+using Kanban;
 using Kanban.Contexts;
+using Kanban.Models;
 using Kanban.Repositories;
 using Kanban.Services;
-using Kanban.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 IServiceCollection services = builder.Services;
 
-services.AddControllers();
+services.AddControllers(options => options.InputFormatters.Insert(0, InputFormatter.GetJsonPatchInputFormatter()));
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 services.AddOpenApi();
 services.AddDbContext<KanbanContext>();

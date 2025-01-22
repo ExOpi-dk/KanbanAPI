@@ -2,6 +2,7 @@ using Kanban.Models;
 using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
 using Kanban.Enums;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Kanban.Controllers
 {
@@ -45,31 +46,37 @@ namespace Kanban.Controllers
             }
         }
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Consumes("application/json")]
-        [HttpPut(Name = "UpsertUser")]
-        public async Task<IActionResult> UpsertUser([FromBody] User requestUser)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Consumes("application/json-patch+json")]
+        [HttpPatch("{id}", Name = "PatchUser")]
+        public async Task<IActionResult> PatchUser(int id, [FromBody] JsonPatchDocument<User> patchDoc)
         {
-            User? existingUser = await userService.GetById(requestUser.Id);
-
-            if (existingUser != null)
+            if (patchDoc == null)
             {
-                User? updatedUser = await userService.Update(requestUser);
-                if (updatedUser != null)
-                {
-                    return Ok(updatedUser);
-                }
                 return BadRequest();
             }
 
-            User? createdUser = await userService.Create(requestUser);
-            if (createdUser != null)
+            OperationResult result = await userService.Update(id, user =>
             {
-                return CreatedAtAction(nameof(UpsertUser), new { id = createdUser.Id }, createdUser);
+                if (user != null)
+                {
+                    patchDoc.ApplyTo(user);
+                }
+            });
+
+            switch (result)
+            {
+                case OperationResult.Success:
+                    return NoContent();
+                case OperationResult.Error:
+                    return BadRequest();
+                case OperationResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
             }
-            return BadRequest();
         }
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -78,15 +85,15 @@ namespace Kanban.Controllers
         [HttpDelete(Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUser([FromQuery] int id)
         {
-            DeleteResult result = await userService.Delete(id);
+            OperationResult result = await userService.Delete(id);
 
             switch (result)
             {
-                case DeleteResult.Success:
+                case OperationResult.Success:
                     return NoContent();
-                case DeleteResult.Error:
+                case OperationResult.Error:
                     return BadRequest();
-                case DeleteResult.NotFound:
+                case OperationResult.NotFound:
                     return NotFound();
                 default:
                     return BadRequest();
