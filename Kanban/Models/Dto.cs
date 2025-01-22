@@ -5,7 +5,9 @@ namespace Kanban.Models
 {
     public class Dto : ITrackable
     {
-        public int Id { get; set; }
+        [ReadOnly(true)]
+        public int Id { get; }
+
         public string? Name { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]

@@ -47,7 +47,7 @@ namespace Kanban.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Boards");
+                    b.ToTable("Boards", (string)null);
                 });
 
             modelBuilder.Entity("Kanban.Models.Status", b =>
@@ -70,7 +70,7 @@ namespace Kanban.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
                 });
 
             modelBuilder.Entity("Kanban.Models.Story", b =>
@@ -111,7 +111,7 @@ namespace Kanban.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Stories");
+                    b.ToTable("Stories", (string)null);
                 });
 
             modelBuilder.Entity("Kanban.Models.User", b =>
@@ -134,7 +134,7 @@ namespace Kanban.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("StoryUser", b =>
@@ -149,7 +149,7 @@ namespace Kanban.Migrations
 
                     b.HasIndex("StoryId");
 
-                    b.ToTable("StoryUser");
+                    b.ToTable("StoryUser", (string)null);
                 });
 
             modelBuilder.Entity("Kanban.Models.Board", b =>

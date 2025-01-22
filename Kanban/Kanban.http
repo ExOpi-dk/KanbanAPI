@@ -79,7 +79,7 @@ POST {{Kanban_HostAddress}}/board
 Content-Type: application/json
 
 {
-  "id": 1,
+  "id": 120,
   "name": "NewBoard",
   "ownerId": "1",
   "created": "2050-01-22T11:24:51.5633333"
@@ -92,7 +92,7 @@ Content-Type: application/json-patch+json
 
 [
   {
-    "op": "replace", "path": "/lastUpdated", "value": "2040-01-22T11:24:51.5633333"
+    "op": "replace", "path": "/id", "value": "50000000"
   }
 ]
 

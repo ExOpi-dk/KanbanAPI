@@ -25,8 +25,6 @@ namespace Kanban.Repositories
 
         public async Task<bool> Create(T dto)
         {
-            dto.Id = default;
-
             await s_context.AddAsync(dto);
             int result = await s_context.SaveChangesAsync();
 
@@ -35,10 +33,6 @@ namespace Kanban.Repositories
 
         public async Task<bool> Update(T dto)
         {
-            //s_context.Entry(dto).Property(p => p.Created).CurrentValue = s_context.Entry(dto).Property(p => p.Created).OriginalValue;
-            //s_context.Entry(dto).Property(p => p.LastUpdated).CurrentValue = s_context.Entry(dto).Property(p => p.LastUpdated).OriginalValue;
-            //s_context.Entry(dto).State = EntityState.Modified;
-
             int result = await s_context.SaveChangesAsync();
 
             return result > 0;

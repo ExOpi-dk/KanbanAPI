@@ -3,6 +3,7 @@ using Kanban.Services;
 using Microsoft.AspNetCore.Mvc;
 using Kanban.Enums;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Exceptions;
 
 namespace Kanban.Controllers
 {
@@ -62,7 +63,14 @@ namespace Kanban.Controllers
             {
                 if (user != null)
                 {
-                    patchDoc.ApplyTo(user);
+                    try
+                    {
+                        patchDoc.ApplyTo(user);
+                    }
+                    catch (JsonPatchException)
+                    {
+                        result = OperationResult.Error;
+                    }
                 }
             });
 
