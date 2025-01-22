@@ -1,5 +1,7 @@
 using Kanban.Models;
 using Kanban.Services;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kanban.Controllers
@@ -27,7 +29,6 @@ namespace Kanban.Controllers
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [Consumes("application/json")]
         [HttpPost(Name = "PostStatus")]
         public async Task<IActionResult> PostStatus([FromBody] Status status)
@@ -48,28 +49,43 @@ namespace Kanban.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Consumes("application/json")]
-        [HttpPut(Name = "UpsertStatus")]
-        public async Task<IActionResult> UpsertStatus([FromBody] Status requestStatus)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+        [Consumes("application/json-patch+json")]
+        [HttpPatch("{id}", Name = "PatchStatus")]
+        public async Task<IActionResult> PatchStatus(int id, [FromBody] JsonPatchDocument<Status> patchDoc)
         {
-            Status? existingStatus = await statusService.GetById(requestStatus.Id);
-
-            if (existingStatus != null)
+            if (patchDoc == null)
             {
-                Status? updatedStory = await statusService.Update(requestStatus);
-                if (updatedStory != null)
-                {
-                    return Ok(updatedStory);
-                }
                 return BadRequest();
             }
 
-            Status? createdStory = await statusService.Create(requestStatus);
-            if (createdStory != null)
+            OperationResult result = await statusService.Update(id, status =>
             {
-                return CreatedAtAction(nameof(UpsertStatus), new { id = createdStory.Id }, createdStory);
+                if (status != null)
+                {
+                    try
+                    {
+                        patchDoc.ApplyTo(status);
+                    }
+                    catch (JsonPatchException)
+                    {
+                        result = OperationResult.Error;
+                    }
+                }
+            });
+
+            switch (result)
+            {
+                case OperationResult.Success:
+                    return NoContent();
+                case OperationResult.Error:
+                    return BadRequest();
+                case OperationResult.NotFound:
+                    return NotFound();
+                default:
+                    return BadRequest();
             }
-            return BadRequest();
         }
     }
 }

@@ -1,10 +1,21 @@
-﻿namespace Kanban.Models
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
+
+namespace Kanban.Models
 {
-    public class Dto
+    public class Dto : ITrackable
     {
-        public int Id { get; set; }
+        [ReadOnly(true)]
+        public int Id { get; }
+
         public string? Name { get; set; }
-        public DateTime Created { get; }
-        public DateTime LastUpdated { get; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [ReadOnly(true)]
+        public DateTime Created { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [ReadOnly(true)]
+        public DateTime LastUpdated { get; set; }
     }
 }

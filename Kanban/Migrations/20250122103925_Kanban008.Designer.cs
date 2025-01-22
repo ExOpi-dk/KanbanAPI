@@ -4,6 +4,7 @@ using Kanban.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kanban.Migrations
 {
     [DbContext(typeof(KanbanContext))]
-    partial class KanbanContextModelSnapshot : ModelSnapshot
+    [Migration("20250122103925_Kanban008")]
+    partial class Kanban008
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +50,7 @@ namespace Kanban.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Boards", (string)null);
+                    b.ToTable("Boards");
                 });
 
             modelBuilder.Entity("Kanban.Models.Status", b =>
@@ -70,7 +73,7 @@ namespace Kanban.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses", (string)null);
+                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("Kanban.Models.Story", b =>
@@ -111,7 +114,7 @@ namespace Kanban.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Stories", (string)null);
+                    b.ToTable("Stories");
                 });
 
             modelBuilder.Entity("Kanban.Models.User", b =>
@@ -134,7 +137,7 @@ namespace Kanban.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("StoryUser", b =>
@@ -149,7 +152,7 @@ namespace Kanban.Migrations
 
                     b.HasIndex("StoryId");
 
-                    b.ToTable("StoryUser", (string)null);
+                    b.ToTable("StoryUser");
                 });
 
             modelBuilder.Entity("Kanban.Models.Board", b =>

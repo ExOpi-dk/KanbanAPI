@@ -24,23 +24,17 @@ namespace Kanban.Repositories
 
         public async Task<bool> Create(T dto)
         {
-            dto.Id = default;
-
             await s_context.AddAsync(dto);
             int result = await s_context.SaveChangesAsync();
 
             return result > 0;
         }
 
-        public async Task<bool> Update(T updatedDto)
+        public async Task<bool> Update(T dto)
         {
-            T? existingDto = await s_context.FindAsync<T>(updatedDto.Id);
-            if (existingDto != null)
-            {
-                s_context.Entry(existingDto).CurrentValues.SetValues(updatedDto);
-                return await s_context.SaveChangesAsync() > 0;
-            }
-            return false;
+            int result = await s_context.SaveChangesAsync();
+
+            return result > 0;
         }
 
         public async Task<bool> Delete(T dto)

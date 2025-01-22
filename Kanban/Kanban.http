@@ -65,10 +65,23 @@ POST {{Kanban_HostAddress}}/board
 Content-Type: application/json
 
 {
-  "id": 1,
+  "id": 120,
   "name": "NewBoard",
-  "ownerId": "1"
+  "ownerId": "1",
+  "created": "2050-01-22T11:24:51.5633333"
 }
+
+###
+
+@id=0
+PATCH {{Kanban_HostAddress}}/board/{{id}}
+Content-Type: application/json-patch+json
+
+[
+  {
+    "op": "replace", "path": "/id", "value": "50000000"
+  }
+]
 
 ###
 
